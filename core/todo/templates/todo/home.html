@@ -3,23 +3,173 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            background: #f4f5f7;
+            margin: 0;
+            padding: 24px;
+            color: #222;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        button,
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font: inherit;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+            color: #fff;
+        }
+
+        .btn-cancel {
+            background: #e5e7eb;
+            color: #222;
+        }
+
+        .task-title {
+            margin: 0 0 4px;
+        }
+
+        .task-desc {
+            margin: 0 0 12px;
+            color: #555;
+        }
+
+        .done .task-title,
+        .done .task-desc {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>home page</h2>
+    <div class="container">
+        <h1>Todo List</h1>
 
-    <form action="" method="post">
-        {% csrf_token %}
-        <h2>Add task</h2>
-        <input type="text" name="title" placeholder="task">
-        <textarea name="description" id=""></textarea>
-        <button type="submit">Submit</button>
-    </form>
+        <!-- Add / Edit form -->
+        <div class="card">
+            {% if edit_task %}
+            <h3>Edit Task</h3>
+            <form method="POST" action="{% url 'update_task' edit_task.id %}">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{ edit_task.title }}" placeholder="Title" required>
+                <textarea name="description" placeholder="Description">{{ edit_task.description }}</textarea>
+                <button type="submit" class="btn-primary">Update</button>
+                <a href="{% url 'home' %}" class="btn btn-cancel">Cancel</a>
+            </form>
+            {% else %}
+            <h3>Add Task</h3>
+            <form method="POST" action="{% url 'home' %}">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="Title" required>
+                <textarea name="description" placeholder="Description"></textarea>
+                <button type="submit" class="btn-primary">Add Task</button>
+            </form>
+            {% endif %}
+        </div>
 
+        <!-- Task list -->
+        {% for item in todo_items %}
+        <div class="card {% if item.complete %}done{% endif %}">
+            <h3 class="task-title">{{ item.title }}</h3>
+            <p class="task-desc">{{ item.description }}</p>
 
+            <div class="actions">
+                {% if not item.complete %}
+                <form method="POST" action="{% url 'complete_task' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-success">Complete</button>
+                </form>
 
+                <a href="{% url 'update_task' item.id %}" class="btn btn-edit">Edit</a>
+                {% endif %}
+
+                <form method="POST" action="{% url 'delete_task' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p class="empty">No tasks yet. Add one above!</p>
+        {% endfor %}
+    </div>
 </body>
 
 </html>
