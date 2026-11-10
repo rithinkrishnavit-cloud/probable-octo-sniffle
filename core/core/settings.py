@@ -1,20 +1,17 @@
-"""
-Django settings for core project.
-"""
-
 from pathlib import Path
+import dj_database_url
+import os
 
 # Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY
-SECRET_KEY = "django-insecure-change-this-key-for-development-only"
+SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-local-key")
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 # Application definition
 
@@ -31,6 +28,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -66,14 +64,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database - PostgreSQL
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "todo_db",
-        "USER": "postgres",
-        "PASSWORD": "psql31",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    "default": dj_database_url.config(
+        default=os.getenv(
+            "DATABASE_URL", "postgres://postgres:psql31@localhost:5432/todo_db"
+        )
+    )
 }
 
 
