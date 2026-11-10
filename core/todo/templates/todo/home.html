@@ -64,37 +64,6 @@
             line-height: 1.5;
         }
 
-        /* Summary Cards */
-        .summary-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .summary-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px 16px;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .summary-number {
-            font-size: 28px;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 4px;
-        }
-
-        .summary-label {
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
         /* Add Task Card */
         .add-task-card {
             background: var(--card-bg);
@@ -390,22 +359,6 @@
         <div class="header">
             <h1>Task Manager</h1>
             <p class="subtitle">Stay focused, stay organized, and get things done!</p>
-        </div>
-
-        <!-- Summary Cards -->
-        <div class="summary-section">
-            <div class="summary-card">
-                <div class="summary-number">{{ total_tasks }}</div>
-                <div class="summary-label">Total Tasks</div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-number">{{ completed_tasks }}</div>
-                <div class="summary-label">Completed</div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-number">{{ remaining_tasks }}</div>
-                <div class="summary-label">Remaining</div>
-            </div>
         </div>
 
         <!-- Add / Edit Task Card -->

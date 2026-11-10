@@ -15,8 +15,9 @@ def register(request):
         if password == confirm_password:
             if not User.objects.filter(username=username).exists():
 
-                User.objects.create_user(username=username, password=password)
-                return redirect("user_login")
+                user = User.objects.create_user(username=username, password=password)
+                login(request, user)
+                return redirect("home")
             else:
                 error = "Username already exists"
         else:
@@ -43,6 +44,7 @@ def user_login(request):
             return render(request, "accounts/login.html", {"error": error})
 
     return render(request, "accounts/login.html")
+
 
 def user_logout(request):
     logout(request)
